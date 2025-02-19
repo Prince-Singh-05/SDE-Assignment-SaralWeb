@@ -1,0 +1,17 @@
+{
+  "name": "saralweb-assignment",
+  "version": "1.0.0",
+  "main": "log-histogram.js",
+  "scripts": {
+    "start": "node ./log-parser.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Log Parser Dashboard</title>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				text-align: center;
+			}
+			.container {
+				width: 80%;
+				margin: auto;
+			}
+			canvas {
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Log Parser Dashboard</h1>
+		<div class="container">
+			<h2>Top IP Addresses (85% of Traffic)</h2>
+			<ul id="topIPs"></ul>
+
+			<h2>Top Hours (70% of Traffic)</h2>
+			<ul id="topHours"></ul>
+
+			<h2>IP Address Occurrences</h2>
+			<canvas id="ipChart"></canvas>
+
+			<h2>Hourly Traffic</h2>
+			<canvas id="hourChart"></canvas>
+		</div>
+
+		<script>
+			async function fetchData() {
+				const response = await fetch("http://localhost:3000/data");
+				const data = await response.json();
+
+				console.log(data);
+
+				document.getElementById("topIPs").innerHTML =
+					data?.Question_2?.topIPs?.data
+						.map((ip) => `<li>${ip}</li>`)
+						.join("");
+				document.getElementById("topHours").innerHTML =
+					data?.Question_2?.topHours?.data
+						.map((hour) => `<li>${hour}:00</li>`)
+						.join("");
+
+				const ipCtx = document
+					.getElementById("ipChart")
+					.getContext("2d");
+				new Chart(ipCtx, {
+					type: "bar",
+					data: {
+						labels: Object.keys(data?.Question_1?.ipCount?.data),
+						datasets: [
+							{
+								label: "Occurrences",
+								data: Object.values(
+									data?.Question_1?.ipCount?.data
+								),
+								backgroundColor: "rgba(75, 192, 192, 0.6)",
+							},
+						],
+					},
+				});
+
+				const hourCtx = document
+					.getElementById("hourChart")
+					.getContext("2d");
+				new Chart(hourCtx, {
+					type: "bar",
+					data: {
+						labels: Object.keys(
+							data?.Question_1?.hourlyTraffic?.data
+						),
+						datasets: [
+							{
+								label: "Visitors",
+								data: Object.values(
+									data?.Question_1?.hourlyTraffic?.data
+								),
+								backgroundColor: "rgba(153, 102, 255, 0.6)",
+							},
+						],
+					},
+				});
+			}
+
+			fetchData();
+		</script>
+	</body>
+</html>
