@@ -38,8 +38,6 @@ async function parseLogFile(filePath) {
 function getTopContributors(data, percentage) {
 	const total = Object.values(data).reduce((sum, count) => sum + count, 0);
 	const sortedEntries = Object.entries(data).sort((a, b) => b[1] - a[1]);
-	console.log(Object.entries(data));
-	console.log("sorted entries", sortedEntries);
 
 	let cumulative = 0;
 	const topContributors = [];
